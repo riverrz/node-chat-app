@@ -12,16 +12,33 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(publicPath));
 
 io.on("connection", socket => {
-  console.log("New user connected");
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
+
+  socket.emit("newConnection", {
+    from: "Admin",
+    text: "Welcome User",
+    createdAt: new Date().getTime()
+  });
+  socket.broadcast.emit("newConnection", {
+    from: "Admin",
+    text: "New User joined",
+    createdAt: new Date().getTime()
+  });
+
   socket.on("createMessage", message => {
     console.log("create message", message);
     io.emit("newMessage", {
       ...message,
       createdAt: new Date().getTime()
     });
+
+    // emit the event to everyone connected except this socket
+    // socket.broadcast.emit("newMessage", {
+    //   ...message,
+    //   createdAt: new Date().getTime()
+    // });
   });
 });
 
