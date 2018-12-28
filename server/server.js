@@ -9,6 +9,8 @@ const io = socketIO(server);
 const publicPath = path.join(__dirname, "../public");
 const PORT = process.env.PORT || 3000;
 
+const { generateMessage } = require("./utils/message");
+
 app.use(express.static(publicPath));
 
 io.on("connection", socket => {
@@ -16,29 +18,18 @@ io.on("connection", socket => {
     console.log("User disconnected");
   });
 
-  socket.emit("newConnection", {
-    from: "Admin",
-    text: "Welcome User",
-    createdAt: new Date().getTime()
-  });
-  socket.broadcast.emit("newConnection", {
-    from: "Admin",
-    text: "New User joined",
-    createdAt: new Date().getTime()
-  });
+  socket.emit(
+    "newConnection",
+    generateMessage("Admin", "Welcome to the chat app")
+  );
+  socket.broadcast.emit(
+    "newConnection",
+    generateMessage("Admin", "New user joined")
+  );
 
   socket.on("createMessage", message => {
     console.log("create message", message);
-    io.emit("newMessage", {
-      ...message,
-      createdAt: new Date().getTime()
-    });
-
-    // emit the event to everyone connected except this socket
-    // socket.broadcast.emit("newMessage", {
-    //   ...message,
-    //   createdAt: new Date().getTime()
-    // });
+    io.emit("newMessage", generateMessage(message.from, message.text));
   });
 });
 
