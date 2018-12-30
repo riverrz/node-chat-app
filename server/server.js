@@ -19,11 +19,11 @@ io.on("connection", socket => {
   });
 
   socket.emit(
-    "newConnection",
+    "newMessage",
     generateMessage("Admin", "Welcome to the chat app")
   );
   socket.broadcast.emit(
-    "newConnection",
+    "newMessage",
     generateMessage("Admin", "New user joined")
   );
 
