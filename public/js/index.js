@@ -10,3 +10,14 @@ socket.on("disconnect", function() {
 socket.on("newMessage", function(message) {
   console.log("newMessage", message);
 });
+
+socket.emit(
+  "createMessage",
+  {
+    from: "Frank@example.com",
+    text: "Hi"
+  },
+  function(reply) {
+    console.log("Got it!" + reply);
+  }
+);
