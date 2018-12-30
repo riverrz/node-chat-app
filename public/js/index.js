@@ -11,13 +11,14 @@ socket.on("newMessage", function(message) {
   console.log("newMessage", message);
 });
 
-socket.emit(
-  "createMessage",
-  {
-    from: "Frank@example.com",
-    text: "Hi"
-  },
-  function(reply) {
-    console.log("Got it!" + reply);
-  }
-);
+$("#message-form").on("submit", function(e) {
+  e.preventDefault();
+  socket.emit(
+    "createMessage",
+    {
+      from: "User",
+      text: $("[name=message]").val()
+    },
+    function() {}
+  );
+});
