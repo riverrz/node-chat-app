@@ -15,7 +15,10 @@ app.use(express.static(publicPath));
 
 io.on("connection", socket => {
   socket.on("disconnect", () => {
-    console.log("User disconnected");
+    socket.broadcast.emit(
+      "newMessage",
+      generateMessage("Admin", "User left the chat")
+    );
   });
 
   socket.emit(
@@ -28,7 +31,6 @@ io.on("connection", socket => {
   );
 
   socket.on("createMessage", (message, callback) => {
-    console.log("create message", message);
     io.emit("newMessage", generateMessage(message.from, message.text));
     callback("This is from the server");
   });
