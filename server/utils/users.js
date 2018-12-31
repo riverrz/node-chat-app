@@ -3,7 +3,7 @@ class Users {
     this.users = [];
   }
   addUser(id, name, room) {
-    const user = { id, name, room };
+    const user = { id, name, room: room.toLowerCase() };
     this.users.push(user);
     return user;
   }
